@@ -10,7 +10,7 @@
 			class-name="com.naveenautomation.utils.ExtentReportListener" />
 			
 	</listeners>
-	<test thread-count="5" name="Test">
+	<test thread-count="6" name="Test">
 		<classes>
 			<class name="com.naveenautomation.pageTests.HomePageTest" />
 			<class name="com.naveenautomation.pageTests.ForgetPasswordTest" />

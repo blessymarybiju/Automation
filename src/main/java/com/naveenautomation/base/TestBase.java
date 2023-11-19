@@ -1,6 +1,8 @@
 
 package com.naveenautomation.base;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -9,8 +11,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.By;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.annotations.BeforeClass;
 
@@ -31,6 +35,8 @@ public class TestBase {
 	public static Logger logger;
 	public WebDriverEvent events;
 	public EventFiringWebDriver e_driver;
+	private Browser BROWSER = Browser.CHROME;
+	private static final boolean RUN_ON_GRID = true;
 
 	@BeforeClass
 	public void loggerSteup() {
@@ -41,18 +47,26 @@ public class TestBase {
 	}
 
 	public void intialisation() {
-		switch (DEFAULT_BROWSER) {
-		case CHROME:
-			wd = new ProxyDriver(WebDriverManager.chromedriver().create());
-			break;
-		case EDGE:
-			wd = new ProxyDriver(WebDriverManager.edgedriver().create());
-			break;
-		case FIREFOX:
-			wd = new ProxyDriver(WebDriverManager.firefoxdriver().create());
-			break;
-		default:
-			throw new IllegalArgumentException();
+		if (RUN_ON_GRID) {
+			try {
+				wd = new RemoteWebDriver(new URL("http://10.0.0.78:4040/"), getOptions());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			switch (DEFAULT_BROWSER) {
+			case CHROME:
+				wd = new ProxyDriver(WebDriverManager.chromedriver().create());
+				break;
+			case EDGE:
+				wd = new ProxyDriver(WebDriverManager.edgedriver().create());
+				break;
+			case FIREFOX:
+				wd = new ProxyDriver(WebDriverManager.firefoxdriver().create());
+				break;
+			default:
+				throw new IllegalArgumentException();
+			}
 		}
 		// Wrap the instance
 		e_driver = new EventFiringWebDriver(wd);
@@ -70,6 +84,10 @@ public class TestBase {
 		wd.manage().window().maximize();
 		wd.manage().deleteAllCookies();
 		wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+
+	public MutableCapabilities getOptions() {
+		return new ManageOptions().getOption(BROWSER);
 	}
 
 	public void tearDown() {

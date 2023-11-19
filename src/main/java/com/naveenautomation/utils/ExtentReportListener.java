@@ -32,7 +32,7 @@ public class ExtentReportListener extends TestListenerAdapter {
 		htmlReporter = new ExtentHtmlReporter(
 				"C:\\Users\\Dijish\\eclipse-workspace\\AutomationFramework\\ExtentReports\\" + repName);
 
-		htmlReporter.loadXMLConfig("C:\\Users\\Dijish\\eclipse-workspace\\AutomationFramework\\extent-config.xml");
+		htmlReporter.loadXMLConfig("C:\\Users\\Dijish\\eclipse-workspace\\Automation_Framework\\extent-config.xml");
 
 		
 		htmlReporter.config().setReportName("My Account Portal Report");
